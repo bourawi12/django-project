@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
 from localflavor.tn.forms import GOVERNORATE_CHOICES  # Update this import path as necessary
@@ -17,7 +18,7 @@ class Profile(models.Model):
     photo = models.ImageField(null=True, blank=True)
     bio = models.CharField(max_length=140, blank=True)
     phone_number = models.CharField(max_length=12, blank=True)
-    location = models.OneToOneField(Location,on_delete=models.CASCADE,null=True)
+    location = models.OneToOneField(Location,on_delete=models.SET_NULL,null=True)
     
     def __str__(self):
         return f'{self.user.username}\'s Profile'
