@@ -10,7 +10,7 @@ def main_view(request):
 @login_required
 def home_view(request):
     listings = Listing.objects.all()
-    context={
-        'listings' : listings,
+    context = {
+        'listings': listings,
     }
-    return render(request,"views/home.html")
+    return render(request, "views/home.html", context)  # Pass context here
