@@ -14,40 +14,6 @@ Frontend: HTML, CSS, JavaScript (with Bootstrap for responsiveness)
 Database: PostgreSQL/MySQL/SQLite (choose as per your project)
 Image Upload: Django's File Upload system with support for car images.
 Authentication: Django's built-in authentication system.
-Installation
-Clone the repository:
-
-bash
-Copy code
-git clone https://github.com/bourawi12/django-project.git
-cd car-selling-platform
-Create and activate a virtual environment:
-
-bash
-Copy code
-python -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-Install dependencies:
-
-bash
-Copy code
-pip install -r requirements.txt
-Set up the database:
-
-bash
-Copy code
-python manage.py migrate
-Create a superuser to access the admin panel:
-
-bash
-Copy code
-python manage.py createsuperuser
-Run the server:
-
-bash
-Copy code
-python manage.py runserver
-Access the platform by visiting http://127.0.0.1:8000/ in your browser.
 
 Usage
 Creating Car Listings:
