@@ -11,6 +11,7 @@ class Listing(models.Model):
     seller = models.ForeignKey(Profile, on_delete=models.CASCADE)
     brand = models.CharField(max_length=24,choices=CARS_BRANDS,default=None)
     model = models.CharField(max_length=17)
+    vin= models.CharField(max_length=17)
     mileage = models.IntegerField(default=0)
     color = models.CharField(max_length=17)
     description = models.TextField()
