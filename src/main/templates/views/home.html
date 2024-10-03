@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {%load static %}
+{% load crispy_forms_tags %}
 
 {% block 'title' %}
 <title>Bouraou'is shop . Home</title>
@@ -17,8 +18,8 @@
             </div>
             <div class="col-lg-6 col-md-8 mx-auto">
                 <form method="get">
-                    <!--lisitng filter-->
-                    <button class="btn btn-sm btn-danger" type="submit">Submit</button>
+                    {{ listing_filter.form | crispy }}
+                    <!--<button class="btn btn-sm btn-danger" type="submit">Submit</button>-->
                 </form>
             </div>
         </div>

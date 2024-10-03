@@ -5,7 +5,7 @@ from .models import Listing
 from .forms import ListingForm
 from users.forms import LocationForm
 from django.contrib import messages
-
+from .filters import ListingFilter
 
 def main_view(request):
     return render(request,'views/main.html', {"name":"autoMax"})
@@ -13,8 +13,10 @@ def main_view(request):
 @login_required
 def home_view(request):
     listings = Listing.objects.all()
+    listing_filter = ListingFilter(request.GET, queryset=listings)
     context = {
         'listings': listings,
+        'lisitng_filter':listing_filter
     }
     return render(request, "views/home.html", context)  # Pass context here
 
