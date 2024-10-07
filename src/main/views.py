@@ -49,7 +49,7 @@ def listing_view(request, id):
         listing = Listing.objects.get(id=id)
         if listing is None : 
             raise Exception
-        return render(request, 'views/lisitng.html', {'listing' : listing, })
+        return render(request, 'views/lisitng.html', {'listing' : listing})
     except Exception as e :
         messages.error(request,f'invalid uid {id} was provided for listings')
         return redirect('home')

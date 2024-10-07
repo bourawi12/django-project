@@ -17,10 +17,11 @@ class Location(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    photo = models.ImageField(upload_to= user_directory_path,blank=True)
+    photo = models.ImageField(upload_to=user_directory_path, null=True)
     bio = models.CharField(max_length=140, blank=True)
     phone_number = models.CharField(max_length=12, blank=True)
-    location = models.OneToOneField(Location,on_delete=models.SET_NULL,null=True)
+    location = models.OneToOneField(
+        Location, on_delete=models.SET_NULL, null=True)
     
     def __str__(self):
         return f'{self.user.username}\'s Profile'
