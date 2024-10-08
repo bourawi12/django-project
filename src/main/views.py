@@ -33,7 +33,7 @@ def list_view(request):
                 listing.seller = request.user.profile
                 lislocation = listing_location
                 listing.save()
-                messagesinfo(request,f'{listing.model} Listing Posted successfully')
+                messages.info(request,f'{listing.model} Listing Posted successfully')
                 return redirect('home')
         except Exception as e :
             print(e)
@@ -54,21 +54,40 @@ def listing_view(request, id):
         messages.error(request,f'invalid uid {id} was provided for listings')
         return redirect('home')
     
+
 @login_required
-def edit_view(request,id):
+def edit_view(request, id):
     try:
-        listing= Listing.objects.get(id=id)
+        listing = Listing.objects.get(id=id)
         if listing is None:
             raise Exception
         if request.method == 'POST':
-            pass
+            listing_form = ListingForm(
+                request.POST, request.FILES, instance=listing)
+            location_form = LocationForm(
+                request.POST, instance=listing.location)
+            if listing_form.is_valid and location_form.is_valid:
+                print('if3')
+                #listing_form.save()
+                print('if3after')
+                location_form.save()
+                
+                messages.info(request, f'Listing {id} updated successfully!')
+                return redirect('home')
+            else:
+                messages.error(
+                    request, f'An error occured while trying to edit the listing.')
+                return reload()
         else:
-            pass
-        
-        return render(request, 'views/edit.html',{})
+            listing_form = ListingForm(instance=listing)
+            location_form = LocationForm(instance=listing.location)
+        context = {
+            'location_form': location_form,
+            'listing_form': listing_form
+        }
+        return render(request, 'views/edit.html', context)
     except Exception as e:
-        messages.error(request, f'an error occured while trying update the listing')
+        messages.error(
+            request, f'An error occured while trying to access the edit page.')
         return redirect('home')
-    
-        
-    
+
