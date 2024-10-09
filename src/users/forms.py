@@ -4,6 +4,7 @@ from .models import Location
 from django.contrib.auth.models import User
 from localflavor.tn.forms import GOVERNORATE_CHOICES
 from .models import Location, Profile
+from .widgets import CustomPictureImageFieldWidget
 
 class UserForm(forms.ModelForm):
     username = forms.CharField(disabled=True)
@@ -13,6 +14,8 @@ class UserForm(forms.ModelForm):
         fields = ('username', 'first_name', 'last_name')
 
 class ProfileForm(forms.ModelForm):
+    photo = forms.ImageField(widget=CustomPictureImageFieldWidget)
+    bio = forms.TextInput()
     
     class Meta : 
         model = Profile
