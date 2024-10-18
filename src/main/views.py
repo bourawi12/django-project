@@ -70,7 +70,6 @@ def listing_view(request, id):
         messages.error(request,f'invalid uid {id} was provided for listings')
         return redirect('home')
     
-
 @login_required
 def edit_view(request, id):
     try:
@@ -78,34 +77,35 @@ def edit_view(request, id):
         if listing is None:
             raise Exception
         if request.method == 'POST':
-            listing_form = ListingForm(
-                request.POST, request.FILES, instance=listing)
-            location_form = LocationForm(
-                request.POST, instance=listing.location)
-            if listing_form.is_valid and location_form.is_valid:
-                print('if3')
-                #listing_form.save()
-                print('if3after')
+            listing_form = ListingForm(request.POST, request.FILES, instance=listing)
+            location_form = LocationForm(request.POST, instance=listing.location)
+            
+            # Make sure to call the is_valid() functions
+            if listing_form.is_valid() and location_form.is_valid():
+                print('Forms are valid')
+                listing_form.save()  # Make sure this is not commented out
                 location_form.save()
                 
                 messages.info(request, f'Listing {id} updated successfully!')
                 return redirect('home')
             else:
-                messages.error(
-                    request, f'An error occured while trying to edit the listing.')
-                return reload()
+                print(listing_form.errors)  # Print form errors to debug
+                print(location_form.errors)
+                messages.error(request, 'An error occurred while trying to edit the listing.')
         else:
             listing_form = ListingForm(instance=listing)
             location_form = LocationForm(instance=listing.location)
+            
         context = {
             'location_form': location_form,
-            'listing_form': listing_form
+            'listing_form': listing_form,
         }
         return render(request, 'views/edit.html', context)
+
     except Exception as e:
-        messages.error(
-            request, f'An error occured while trying to access the edit page.')
+        messages.error(request, f'An error occurred while trying to access the edit page: {e}')
         return redirect('home')
+
 
 @login_required
 def like_listing_view(request, id):
