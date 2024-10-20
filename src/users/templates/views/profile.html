@@ -12,6 +12,11 @@
                 </div>
             </div>
         </div>
+        {% if user.profile.photo %}
+    <img src="{{ user.profile.photo.url }}" alt="Profile Photo" class="img-thumbnail" style="max-width: 200px;">
+{% else %}
+    <p>No profile photo uploaded yet.</p>
+{% endif %}
         <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row">
