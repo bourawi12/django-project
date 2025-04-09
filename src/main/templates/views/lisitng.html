@@ -21,6 +21,16 @@
     </section>
     <div class="bg-light">
         <div class="container px-4 py-5">
+            <div class="container px-4 py-5">
+                <div class="row g-4 py-5">
+                    <div class="col d-flex align-items-start">
+                        <div>
+                            <h2 class="mb-3 border-bottom" style="color: black">Description</h2>
+                            <p> {{ listing.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <h2 class="mb-3 border-bottom" style="color: black">Auto Information</h2>
             <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
                 <div class="col-lg-8">
@@ -28,9 +38,10 @@
                         <table class="table text-center">
                             <tbody>
                                 <tr>
-                                    <th scope="row" class="text-start">Brand</th>
+                                    <th scope="row" class="text-start">demande</th>
                                     <td> {{listing.brand|capfirst }}</td>
                                 </tr>
+                                <!--
                                 <tr>
                                     <th scope="row" class="text-start">Vin</th>
                                     <td> {{listing.vin }}</td>
@@ -50,6 +61,14 @@
                                 <tr>
                                     <th scope="row" class="text-start">Transmisson</th>
                                     <td> {{listing.transmisson|capfirst }}</td>
+                                </tr>-->
+                                <tr>
+                                    <th scope="row" class="text-start">decision</th>
+                                    <td> {{listing.decision }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="text-start">cost</th>
+                                    <td> {{listing.cost }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -58,31 +77,22 @@
                 <div class="col-lg-4">
                     <div class="card mb-4 rounded-3 shadow-sm">
                         <div class="card-header py-3">
-                            <h4 class="my-0 fw-normal">Location</h4>
+                            <h4 class="my-0 fw-normal">Phone</h4>
                         </div>
                         <div class="card-body">
-                            <ul class="list-unstyled mt-3 mb-4">
+                            <!--<ul class="list-unstyled mt-3 mb-4">
                                 <li>{{ listing.location.city }}, {{ listing.location.state }},
                                     {{listing.location.zip_code }} </li>
-                            </ul>
+                            </ul>-->
                             <button
                                 class="w-100 btn btn-lg btn-outline-primary my-3">{{listing.seller.phone_number}}</button>
-                            <button id="sendEmail" class="w-100 btn btn-lg btn-outline-primary">Send Email</button>
+                            <!--<button id="sendEmail" class="w-100 btn btn-lg btn-outline-primary">Send Email</button>-->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="container px-4 py-5">
-            <div class="row g-4 py-5">
-                <div class="col d-flex align-items-start">
-                    <div>
-                        <h2 class="mb-3 border-bottom" style="color: black">Description</h2>
-                        <p> {{ listing.description }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
     </div>
     
 </main>

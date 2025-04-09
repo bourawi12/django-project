@@ -20,3 +20,8 @@ TRANSMISSION_OPTIONS = (
     ('automatic', 'Automatic'),
     ('manual', 'Manual'),
 )
+
+DECISION = (
+    ('accepted', 'Accepted'),
+    ('refused', 'Refused'),
+)

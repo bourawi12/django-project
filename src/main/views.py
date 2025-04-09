@@ -1,3 +1,6 @@
+from django.shortcuts import redirect
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render ,get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -15,8 +18,10 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.mail import send_mail
-
-from .models import LikedListing, Listing
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.admin.views.decorators import staff_member_required
+from .models import Listing
+from .models import LikedListing, Listing,Profile
 from .forms import ListingForm
 from users.forms import LocationForm
 from .filters import ListingFilter
@@ -25,7 +30,17 @@ def main_view(request):
 
 @login_required
 def home_view(request):
-    listings = Listing.objects.all()
+    if request.user.is_staff:
+        # Admin sees all listings
+        listings = Listing.objects.all()
+    else:
+        # Regular users see only their own listings
+        try:
+            # Assuming you have a OneToOneField in Profile to User
+            profile = Profile.objects.get(user=request.user)
+            listings = Listing.objects.filter(seller=profile)  # Ensure this is the correct field name
+        except Profile.DoesNotExist:
+            listings = Listing.objects.none() 
     listing_filter = ListingFilter(request.GET, queryset=listings)
     user_liked_listings = LikedListing.objects.filter(profile = request.user.profile).values_list('listing')
     liked_listings_ids = [l[0] for l in user_liked_listings]
@@ -40,24 +55,21 @@ def home_view(request):
 @login_required
 def list_view(request):
     if request.method == 'POST':
-        try:
-            listing_form = ListingForm(request.POST,request.FILES)
-            location_form = LocationForm(request.POST,)
-            if listing_form.is_valid() and location_form.is_valid():
-                listing = listing_form.save(commit=False)
-                listing_location= location_form.save()
-                listing.seller = request.user.profile
-                lislocation = listing_location
-                listing.save()
-                messages.info(request,f'{listing.model} Listing Posted successfully')
-                return redirect('home')
-        except Exception as e :
-            print(e)
-            messages.error(request,'error occured while posting')
-    elif request.method =='GET':
-        listing_form = ListingForm()
+        listing_form = ListingForm(request.POST, request.FILES, user=request.user)
+        location_form = LocationForm(request.POST)
+
+        if listing_form.is_valid() and location_form.is_valid():
+            listing = listing_form.save(commit=False)
+            listing.seller = request.user.profile
+            listing.save()
+            location_form.save()
+            messages.info(request, f'{listing.model} Listing Posted successfully')
+            return redirect('home')
+    else:
+        listing_form = ListingForm(user=request.user)  # Pass user here
         location_form = LocationForm()
-    return render(request,'views/list.html', {'listing_form':listing_form,'location_form':location_form})
+
+    return render(request, 'views/list.html', {'listing_form': listing_form, 'location_form': location_form})
 
 @login_required
 def listing_view(request, id):
@@ -74,28 +86,23 @@ def listing_view(request, id):
 def edit_view(request, id):
     try:
         listing = Listing.objects.get(id=id)
-        if listing is None:
-            raise Exception
+        
         if request.method == 'POST':
-            listing_form = ListingForm(request.POST, request.FILES, instance=listing)
+            listing_form = ListingForm(request.POST, request.FILES, instance=listing, user=request.user)
             location_form = LocationForm(request.POST, instance=listing.location)
-            
-            # Make sure to call the is_valid() functions
+
             if listing_form.is_valid() and location_form.is_valid():
-                print('Forms are valid')
-                listing_form.save()  # Make sure this is not commented out
-                location_form.save()
+                listing_form.save()  # Save the listing form
+                location_form.save()  # Save the location form
                 
                 messages.info(request, f'Listing {id} updated successfully!')
                 return redirect('home')
             else:
-                print(listing_form.errors)  # Print form errors to debug
-                print(location_form.errors)
                 messages.error(request, 'An error occurred while trying to edit the listing.')
         else:
-            listing_form = ListingForm(instance=listing)
+            listing_form = ListingForm(instance=listing, user=request.user)  # Pass user here
             location_form = LocationForm(instance=listing.location)
-            
+        
         context = {
             'location_form': location_form,
             'listing_form': listing_form,
@@ -105,6 +112,8 @@ def edit_view(request, id):
     except Exception as e:
         messages.error(request, f'An error occurred while trying to access the edit page: {e}')
         return redirect('home')
+
+
 
 
 @login_required
@@ -122,6 +131,42 @@ def like_listing_view(request, id):
     return JsonResponse({
         'is_liked_by_user': created,
     })
-        
+
+@login_required
+@require_POST    
+@staff_member_required
+def accept_listing(request, id):
+    if request.method == 'POST' and request.user.is_staff:
+        listing = Listing.objects.get(id=id)
+        listing.decision = 'accepted'
+        listing.save()
+        return redirect('home')  # Redirect after submission
+    return redirect('home')
+
+@login_required
+@require_POST
+@staff_member_required
+def refuse_listing(request, id):
+    if request.method == 'POST' and request.user.is_staff:
+        listing = Listing.objects.get(id=id)
+        listing.decision = 'refused'
+        listing.save()
+        return redirect('home')  # Redirect after submission
+    return redirect('home')
+@login_required
+@staff_member_required
+@require_POST
+def delete_listing(request, id):
+    # Fetch the listing by its ID, or return a 404 error if it doesn't exist
+    listing = get_object_or_404(Listing, id=id)
+
+    # Delete the listing
+    listing.delete()
+
+    # Add a success message
+    messages.success(request, f'Listing {id} deleted successfully.')
+
+    # Redirect back to the home page or listings page after deletion
+    return redirect('home')
         
 

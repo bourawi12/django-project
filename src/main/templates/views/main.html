@@ -6,13 +6,13 @@
 {% block 'body' %}
 <div class="d-flex h-100 text-center text-white index">
     <video autoplay muted loop id="myVideo">
-        <source src="{% static 'videos/bg.mp4' %}" type="video/mp4">
+        <source src="{% static 'videos/Untitled_design_(2).mp4' %}" type="video/mp4">
         <!-- Credit: https://www.pexels.com/@kelly-l-1179532 (Pexels.com)-->
     </video>
     <div class="d-flex w-100 h-100 p-3 mx-auto flex-column main-content">
         <header class="mb-auto">
             <div>
-                <h3 class="float-md-start mb-0">Bouraoui's shop</h3>
+                <h3 class="float-md-start mb-0">Tunisian chemical group</h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
                     {%if request.user.is_authenticated %}
                     
@@ -24,17 +24,15 @@
             </div>
         </header>
         <main class="px-3">
-            <h2>Find a deal near you!</h2>
-            <p class="lead">Looking to buy or sell a used car? We've got you
-                covered.  Bouraoui's shop is the leading used car marketplace.</p>
+            <h2>Donate to other entreprises Via us</h2>
+            <p class="lead">This is a Donating System to help entreprises donate to each other Via the Tunisian chemical group</p>
             <p class="lead">
                 <a href="{% url 'register'%}"
                     class="btn btn-lg btn-secondary fw-bold border-white bg-white">Register</a>
             </p>
         </main>
         <footer class="mt-auto text-white-50">
-            <p>Copyright © {% now 'Y' %} <a href="" class="text-white">Bouraoui's shop</a> by <a href="https://preneure.com"
-                    class="text-white">Preneure.com</a></p>
+            
         </footer>
     </div>
 </div>
